@@ -1,475 +1,220 @@
-<style> 
-
-/* --- Základné a Globálne Štýly --- */ 
-
-body { 
-
-  background-color: #f8f9fa; 
-
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-
-} 
-
- 
-
-/* --- Loading Overlay --- */ 
-
-#loadingData { 
-
-  position: fixed; 
-
-  top: 0; 
-
-  left: 0; 
-
-  z-index: 10001; 
-
-  width: 100vw; 
-
-  height: 100vh; 
-
-  background-color: rgba(255, 255, 255, 0.85); 
-
-} 
-
- 
-
-/* --- Štýly pre záložky hárkov --- */ 
-
-.nav-tabs .nav-link { 
-
-  border-bottom: none; 
-
-  transition: background-color 0.3s ease; 
-
-} 
-
- 
-
-.nav-tabs .nav-link.active { 
-
-  border-color: #dee2e6 #dee2e6 #fff; 
-
-  font-weight: bold; 
-
-} 
-
- 
-
-/* --- Ovládacie prvky DataTables --- */ 
-
-.dt-buttons.btn-group { 
-
-  margin-right: 10px; 
-
-} 
-
- 
-
-.dataTables_filter { 
-
-  float: right; 
-
-} 
-
- 
-
-div.dt-buttons { 
-
-  display: inline-block; 
-
-} 
-
- 
-
-/* --- Accordion pre filtre --- */ 
-
-.accordion .accordion-header { 
-
-  transition: background-color 0.3s; 
-
-} 
-
- 
-
-.accordion .accordion-button:not(.collapsed) { 
-
-  color: #000; 
-
-  font-weight: 500; 
-
-} 
-
- 
-
-.accordion-button:focus { 
-
-  box-shadow: none; 
-
-} 
-
- 
-
-/* --- Štýly pre "Floating Label" vo filtroch --- */ 
-
-.floating-label-group { 
-
-  position: relative; 
-
-} 
-
- 
-
-.floating-label-group .form-control, 
-
-.floating-label-group .form-select { 
-
-  padding-top: 1.5rem; 
-
-  padding-bottom: .5rem; 
-
-  height: calc(3.5rem + 2px); 
-
-} 
-
- 
-
-.floating-label-group label { 
-
-  position: absolute; 
-
-  top: 0; 
-
-  left: 0; 
-
-  height: 100%; 
-
-  padding: 1rem .75rem; 
-
-  pointer-events: none; 
-
-  border: 1px solid transparent; 
-
-  transition: all .2s ease-in-out; 
-
-  color: #6c757d; 
-
-} 
-
- 
-
-.floating-label-group .form-control::placeholder { 
-
-  color: transparent; 
-
-} 
-
- 
-
-.floating-label-group .form-control:focus ~ label, 
-
-.floating-label-group .form-control:not(:placeholder-shown) ~ label, 
-
-.floating-label-group .form-select:focus ~ label, 
-
-.floating-label-group .form-select:valid ~ label { 
-
-  font-size: 0.8em; 
-
-  transform: translateY(-.6rem) translateX(.25rem); 
-
-  background-color: white; 
-
-  padding: 0 .25rem; 
-
-  height: auto; 
-
-  left: .5rem; 
-
-  top: .5rem; 
-
-  color: #007bff; 
-
-  z-index: 10; 
-
-} 
-
- 
-
-.floating-label-group .form-select { 
-
-  background-color: #fff; 
-
-} 
-
- 
-
-.floating-label-group select:required:invalid + label { 
-
-  color: #6c757d; 
-
-} 
-
- 
-
-/* --- Tlačidlo na vymazanie obsahu filtra --- */ 
-
-.clear-filter-btn { 
-
-  position: absolute; 
-
-  top: 50%; 
-
-  right: 10px; 
-
-  transform: translateY(-50%); 
-
-  cursor: pointer; 
-
-  color: #aaa; 
-
-  display: none; 
-
-  font-weight: bold; 
-
-  padding: 0 5px; 
-
-  z-index: 10; 
-
-} 
-
- 
-
-.floating-label-group .form-control:not(:placeholder-shown) ~ .clear-filter-btn { 
-
-  display: inline; 
-
-} 
-
- 
-
-.clear-filter-btn:hover { 
-
-  color: #333; 
-
-} 
-
- 
-
-/* --- Farebné zvýraznenie aktívnych filtrov --- */ 
-
-.floating-label-group.filter-active-text .form-control { 
-
-  background-color: #e8f5e9; 
-
-  border-color: #c8e6c9; 
-
-} 
-
- 
-
-.floating-label-group.filter-active-select .form-control, 
-
-.floating-label-group.filter-active-select .form-select { 
-
-  background-color: #e3f2fd; 
-
-  border-color: #b3e5fc; 
-
-} 
-
- 
-
-.dataTables_filter.filter-active-text input { 
-
-  background-color: #e8f5e9 !important; 
-
-  border-color: #c8e6c9 !important; 
-
-} 
-
- 
-
-/* --- Farby pätičky tabuľky --- */ 
-
-#main-table tfoot th { 
-
-  background-color: #343a40; 
-
-  color: white; 
-
-  font-weight: bold; 
-
-} 
-
- 
-
-/* --- Akčné tlačidlá v riadkoch tabuľky --- */ 
-
-.actions-cell { 
-
-  position: relative; 
-
-  text-align: center; 
-
-} 
-
- 
-
-.action-container .action-toggle-btn { 
-
-  cursor: pointer; 
-
-} 
-
- 
-
-.action-buttons-hidden { 
-
-  display: none; 
-
-  position: absolute; 
-
-  background-color: white; 
-
-  border: 1px solid #ccc; 
-
-  z-index: 1000; 
-
-  min-width: 50px; 
-
-  padding: 5px; 
-
-  border-radius: 4px; 
-
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
-
-  top: 100%; 
-
-  left: 50%; 
-
-  transform: translateX(-50%); 
-
-} 
-
- 
-
-.action-buttons-hidden .btn { 
-
-  display: block; 
-
-  width: 100%; 
-
-  margin-bottom: 5px; 
-
-} 
-
- 
-
-.action-buttons-hidden .btn:last-child { 
-
-  margin-bottom: 0; 
-
-} 
-
- 
-
-/* --- Status dropdown --- */ 
-
-.status-select { 
-
-  font-size: 0.8rem; 
-
-  padding: 0.25rem; 
-
-} 
-
- 
-
-.status-select option[value="0"] { 
-
-  color: #dc3545; 
-
-} 
-
- 
-
-.status-select option[value="1"] { 
-
-  color: #fd7e14; 
-
-} 
-
- 
-
-.status-select option[value="2"] { 
-
-  color: #ffc107; 
-
-} 
-
- 
-
-.status-select option[value="3"] { 
-
-  color: #0d6efd; 
-
-} 
-
- 
-
-.status-select option[value="4"] { 
-
-  color: #198754; 
-
-} 
-
- 
-
-/* --- Countdown text --- */ 
-
-#countdownText { 
-
-  font-weight: bold; 
-
-  color: #6c757d; 
-
-} 
-
- 
-
-/* --- Checkbox pre označenie riadkov --- */ 
-
-.row-mark { 
-
-  cursor: pointer; 
-
-  width: 16px; 
-
-  height: 16px; 
-
-} 
-
- 
-
-/* --- Hover efekt pre riadky tabuľky --- */ 
-
-#main-table tbody tr:hover { 
-
-  background-color: rgba(0, 0, 0, 0.05) !important; 
-
-} 
-
- 
-
-/* --- Štýl pre označené riadky --- */ 
-
-#main-table tbody tr.selected { 
-
-  background-color: rgba(13, 110, 253, 0.1) !important; 
-
-} 
-
-</style> 
-
- 
+<style>
+/* --- Základné a Globálne Štýly --- */
+body {
+  background-color: #f8f9fa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* --- Loading Overlay --- */
+#loadingData {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+/* --- Štýly pre záložky hárkov --- */
+.nav-tabs .nav-link {
+  border-bottom: none;
+  transition: background-color 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+  border-color: #dee2e6 #dee2e6 #fff;
+  font-weight: bold;
+}
+
+/* --- Ovládacie prvky DataTables --- */
+.dt-buttons.btn-group {
+  margin-right: 10px;
+}
+
+.dataTables_filter {
+  float: right;
+}
+
+div.dt-buttons {
+  display: inline-block;
+}
+
+/* --- Accordion pre filtre --- */
+.accordion .accordion-header {
+  transition: background-color 0.3s;
+}
+
+.accordion .accordion-button:not(.collapsed) {
+  color: #000;
+  font-weight: 500;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+/* --- Štýly pre "Floating Label" vo filtroch --- */
+.floating-label-group {
+  position: relative;
+}
+
+.floating-label-group .form-control,
+.floating-label-group .form-select {
+  padding-top: 1.5rem;
+  padding-bottom: .5rem;
+  height: calc(3.5rem + 2px);
+}
+
+.floating-label-group label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 1rem .75rem;
+  pointer-events: none;
+  border: 1px solid transparent;
+  transition: all .2s ease-in-out;
+  color: #6c757d;
+}
+
+.floating-label-group .form-control::placeholder {
+  color: transparent;
+}
+
+.floating-label-group .form-control:focus ~ label,
+.floating-label-group .form-control:not(:placeholder-shown) ~ label,
+.floating-label-group .form-select:focus ~ label,
+.floating-label-group .form-select:valid ~ label {
+  font-size: 0.8em;
+  transform: translateY(-.6rem) translateX(.25rem);
+  background-color: white;
+  padding: 0 .25rem;
+  height: auto;
+  left: .5rem;
+  top: .5rem;
+  color: #007bff;
+  z-index: 10;
+}
+
+.floating-label-group .form-select {
+  background-color: #fff;
+}
+
+.floating-label-group select:required:invalid + label {
+  color: #6c757d;
+}
+
+/* --- Tlačidlo na vymazanie obsahu filtra --- */
+.clear-filter-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #aaa;
+  display: none;
+  font-weight: bold;
+  padding: 0 5px;
+  z-index: 10;
+}
+
+.floating-label-group .form-control:not(:placeholder-shown) ~ .clear-filter-btn {
+  display: inline;
+}
+
+.clear-filter-btn:hover {
+  color: #333;
+}
+
+/* --- Farebné zvýraznenie aktívnych filtrov --- */
+.floating-label-group.filter-active-text .form-control {
+  background-color: #e8f5e9;
+  border-color: #c8e6c9;
+}
+
+.floating-label-group.filter-active-select .form-control,
+.floating-label-group.filter-active-select .form-select {
+  background-color: #e3f2fd;
+  border-color: #b3e5fc;
+}
+
+.dataTables_filter.filter-active-text input {
+  background-color: #e8f5e9 !important;
+  border-color: #c8e6c9 !important;
+}
+
+/* --- Farby pätičky tabuľky --- */
+#main-table tfoot th {
+  background-color: #343a40;
+  color: white;
+  font-weight: bold;
+}
+
+/* --- Akčné tlačidlá v riadkoch tabuľky --- */
+.actions-cell {
+  position: relative;
+  text-align: center;
+}
+
+.action-container .action-toggle-btn {
+  cursor: pointer;
+}
+
+.action-buttons-hidden {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  min-width: 50px;
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.action-buttons-hidden .btn {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.action-buttons-hidden .btn:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Status dropdown --- */
+.status-select {
+  font-size: 0.8rem;
+  padding: 0.25rem;
+}
+
+.status-select option[value="0"] {
+  color: #dc3545;
+}
+
+.status-select option[value="1"] {
+  color: #fd7e14;
+}
+
+.status-select option[value="2"] {
+  color: #ffc107;
+}
+
+.status-select option[value="3"] {
+  color: #0d6efd;
+}
+
+.status-select option[value="4"] {
+  color: #198754;
+}
+
+/* --- Countdown text --- */
+#countdownText {
+  font-weight: bold;
+  color: #6c757d;
+}
+</style>
