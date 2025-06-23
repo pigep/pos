@@ -1,475 +1,890 @@
-<style> 
-
-/* --- Základné a Globálne Štýly --- */ 
-
-body { 
-
-  background-color: #f8f9fa; 
-
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-
-} 
-
- 
-
-/* --- Loading Overlay --- */ 
-
-#loadingData { 
-
-  position: fixed; 
-
-  top: 0; 
-
-  left: 0; 
-
-  z-index: 10001; 
-
-  width: 100vw; 
-
-  height: 100vh; 
-
-  background-color: rgba(255, 255, 255, 0.85); 
-
-} 
-
- 
-
-/* --- Štýly pre záložky hárkov --- */ 
-
-.nav-tabs .nav-link { 
-
-  border-bottom: none; 
-
-  transition: background-color 0.3s ease; 
-
-} 
-
- 
-
-.nav-tabs .nav-link.active { 
-
-  border-color: #dee2e6 #dee2e6 #fff; 
-
-  font-weight: bold; 
-
-} 
-
- 
-
-/* --- Ovládacie prvky DataTables --- */ 
-
-.dt-buttons.btn-group { 
-
-  margin-right: 10px; 
-
-} 
-
- 
-
-.dataTables_filter { 
-
-  float: right; 
-
-} 
-
- 
-
-div.dt-buttons { 
-
-  display: inline-block; 
-
-} 
-
- 
-
-/* --- Accordion pre filtre --- */ 
-
-.accordion .accordion-header { 
-
-  transition: background-color 0.3s; 
-
-} 
-
- 
-
-.accordion .accordion-button:not(.collapsed) { 
-
-  color: #000; 
-
-  font-weight: 500; 
-
-} 
-
- 
-
-.accordion-button:focus { 
-
-  box-shadow: none; 
-
-} 
-
- 
-
-/* --- Štýly pre "Floating Label" vo filtroch --- */ 
-
-.floating-label-group { 
-
-  position: relative; 
-
-} 
-
- 
-
-.floating-label-group .form-control, 
-
-.floating-label-group .form-select { 
-
-  padding-top: 1.5rem; 
-
-  padding-bottom: .5rem; 
-
-  height: calc(3.5rem + 2px); 
-
-} 
-
- 
-
-.floating-label-group label { 
-
-  position: absolute; 
-
-  top: 0; 
-
-  left: 0; 
-
-  height: 100%; 
-
-  padding: 1rem .75rem; 
-
-  pointer-events: none; 
-
-  border: 1px solid transparent; 
-
-  transition: all .2s ease-in-out; 
-
-  color: #6c757d; 
-
-} 
-
- 
-
-.floating-label-group .form-control::placeholder { 
-
-  color: transparent; 
-
-} 
-
- 
-
-.floating-label-group .form-control:focus ~ label, 
-
-.floating-label-group .form-control:not(:placeholder-shown) ~ label, 
-
-.floating-label-group .form-select:focus ~ label, 
-
-.floating-label-group .form-select:valid ~ label { 
-
-  font-size: 0.8em; 
-
-  transform: translateY(-.6rem) translateX(.25rem); 
-
-  background-color: white; 
-
-  padding: 0 .25rem; 
-
-  height: auto; 
-
-  left: .5rem; 
-
-  top: .5rem; 
-
-  color: #007bff; 
-
-  z-index: 10; 
-
-} 
-
- 
-
-.floating-label-group .form-select { 
-
-  background-color: #fff; 
-
-} 
-
- 
-
-.floating-label-group select:required:invalid + label { 
-
-  color: #6c757d; 
-
-} 
-
- 
-
-/* --- Tlačidlo na vymazanie obsahu filtra --- */ 
-
-.clear-filter-btn { 
-
-  position: absolute; 
-
-  top: 50%; 
-
-  right: 10px; 
-
-  transform: translateY(-50%); 
-
-  cursor: pointer; 
-
-  color: #aaa; 
-
-  display: none; 
-
-  font-weight: bold; 
-
-  padding: 0 5px; 
-
-  z-index: 10; 
-
-} 
-
- 
-
-.floating-label-group .form-control:not(:placeholder-shown) ~ .clear-filter-btn { 
-
-  display: inline; 
-
-} 
-
- 
-
-.clear-filter-btn:hover { 
-
-  color: #333; 
-
-} 
-
- 
-
-/* --- Farebné zvýraznenie aktívnych filtrov --- */ 
-
-.floating-label-group.filter-active-text .form-control { 
-
-  background-color: #e8f5e9; 
-
-  border-color: #c8e6c9; 
-
-} 
-
- 
-
-.floating-label-group.filter-active-select .form-control, 
-
-.floating-label-group.filter-active-select .form-select { 
-
-  background-color: #e3f2fd; 
-
-  border-color: #b3e5fc; 
-
-} 
-
- 
-
-.dataTables_filter.filter-active-text input { 
-
-  background-color: #e8f5e9 !important; 
-
-  border-color: #c8e6c9 !important; 
-
-} 
-
- 
-
-/* --- Farby pätičky tabuľky --- */ 
-
-#main-table tfoot th { 
-
-  background-color: #343a40; 
-
-  color: white; 
-
-  font-weight: bold; 
-
-} 
-
- 
-
-/* --- Akčné tlačidlá v riadkoch tabuľky --- */ 
-
-.actions-cell { 
-
-  position: relative; 
-
-  text-align: center; 
-
-} 
-
- 
-
-.action-container .action-toggle-btn { 
-
-  cursor: pointer; 
-
-} 
-
- 
-
-.action-buttons-hidden { 
-
-  display: none; 
-
-  position: absolute; 
-
-  background-color: white; 
-
-  border: 1px solid #ccc; 
-
-  z-index: 1000; 
-
-  min-width: 50px; 
-
-  padding: 5px; 
-
-  border-radius: 4px; 
-
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
-
-  top: 100%; 
-
-  left: 50%; 
-
-  transform: translateX(-50%); 
-
-} 
-
- 
-
-.action-buttons-hidden .btn { 
-
-  display: block; 
-
-  width: 100%; 
-
-  margin-bottom: 5px; 
-
-} 
-
- 
-
-.action-buttons-hidden .btn:last-child { 
-
-  margin-bottom: 0; 
-
-} 
-
- 
-
-/* --- Status dropdown --- */ 
-
-.status-select { 
-
-  font-size: 0.8rem; 
-
-  padding: 0.25rem; 
-
-} 
-
- 
-
-.status-select option[value="0"] { 
-
-  color: #dc3545; 
-
-} 
-
- 
-
-.status-select option[value="1"] { 
-
-  color: #fd7e14; 
-
-} 
-
- 
-
-.status-select option[value="2"] { 
-
-  color: #ffc107; 
-
-} 
-
- 
-
-.status-select option[value="3"] { 
-
-  color: #0d6efd; 
-
-} 
-
- 
-
-.status-select option[value="4"] { 
-
-  color: #198754; 
-
-} 
-
- 
-
-/* --- Countdown text --- */ 
-
-#countdownText { 
-
-  font-weight: bold; 
-
-  color: #6c757d; 
-
-} 
-
- 
-
-/* --- Checkbox pre označenie riadkov --- */ 
-
-.row-mark { 
-
-  cursor: pointer; 
-
-  width: 16px; 
-
-  height: 16px; 
-
-} 
-
- 
-
-/* --- Hover efekt pre riadky tabuľky --- */ 
-
-#main-table tbody tr:hover { 
-
-  background-color: rgba(0, 0, 0, 0.05) !important; 
-
-} 
-
- 
-
-/* --- Štýl pre označené riadky --- */ 
-
-#main-table tbody tr.selected { 
-
-  background-color: rgba(13, 110, 253, 0.1) !important; 
-
-} 
-
-</style> 
-
- 
+<script>
+// --- GLOBÁLNE PREMENNÉ A STAV APLIKÁCIE ---
+let permanenKey;
+let dataTableInstance;
+let tableHeaders = [];
+let dropdownOptions = {};
+let allSheetsData = {};
+let currentSheet = "";
+let refreshInterval;
+let countdownInterval;
+
+// --- PRIHLÁSENIE ---
+function checkLogin() {
+  showLoading();
+  const input1 = document.getElementById('input');
+  const input2 = document.getElementById('input2');
+  
+  if (!input1.value || !input2.value) {
+    hideLoading();
+    Swal.fire("Chyba", "Vyplňte, prosím, obidve polia!", "warning");
+    return;
+  }
+  
+  const objInput = { input1: input1.value, input2: input2.value };
+  google.script.run
+    .withSuccessHandler(onLoginSuccess)
+    .withFailureHandler(onLoginFailure)
+    .getInitialData(objInput);
+}
+
+function onLoginSuccess(data) {
+  try {
+    if (data && data.allSheetsData) {
+      permanenKey = data.userKey;
+      allSheetsData = data.allSheetsData;
+      
+      document.getElementById('welcomeUser').innerHTML = permanenKey;
+      document.querySelector('.loginClass').style.display = "none";
+      document.querySelector('.tableClass').style.display = "block";
+      
+      if (data.sheetNames && data.sheetNames.length > 0) {
+        setupSheetTabs(data.sheetNames);
+        const lastSheet = localStorage.getItem('lastActiveSheet') || 
+                         data.sheetNames[0].originalName;
+        switchSheet(lastSheet);
+      } else {
+        Swal.fire("Upozornenie", "Nenašli sa žiadne dostupné hárky s dátami.", "info");
+      }
+      
+      startAutoRefreshCountdown();
+    } else {
+      Swal.fire("Chyba", "Neplatné prihlasovacie údaje alebo sa nepodarilo načítať dáta.", "error");
+    }
+  } catch (e) {
+    console.error("Chyba v onLoginSuccess:", e);
+    Swal.fire("Chyba aplikácie", `Vyskytla sa chyba pri spracovaní dát: ${e.message}`, "error");
+  } finally {
+    hideLoading();
+  }
+}
+
+function onLoginFailure(error) {
+  hideLoading();
+  console.error('Login Failure:', error);
+  Swal.fire("Chyba", "Nastala chyba pri komunikácii so serverom: " + error.message, "error");
+}
+
+// --- AUTO REFRESH ---
+function startAutoRefreshCountdown() {
+  clearInterval(countdownInterval);
+  clearInterval(refreshInterval);
+  
+  let secondsLeft = 300;
+  
+  function updateCountdown() {
+    const minutes = Math.floor(secondsLeft / 60);
+    const seconds = secondsLeft % 60;
+    document.getElementById('countdownText').textContent = 
+      `Aktualizácia za ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    
+    if (secondsLeft <= 0) {
+      refreshData();
+      secondsLeft = 300;
+    } else {
+      secondsLeft--;
+    }
+  }
+  
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+  refreshInterval = setInterval(refreshData, 300000);
+}
+
+function refreshData() {
+  showLoading();
+  google.script.run
+    .withSuccessHandler(data => {
+      if (data && data.allSheetsData) {
+        allSheetsData = data.allSheetsData;
+        switchSheet(currentSheet);
+      }
+      hideLoading();
+      startAutoRefreshCountdown();
+    })
+    .withFailureHandler(error => {
+      hideLoading();
+      console.error('Refresh failed:', error);
+      startAutoRefreshCountdown();
+    })
+    .getAllSheetsData(permanenKey);
+}
+
+function logout() {
+  clearInterval(countdownInterval);
+  clearInterval(refreshInterval);
+  document.querySelector('.loginClass').style.display = "block";
+  document.querySelector('.tableClass').style.display = "none";
+  document.getElementById('input').value = "";
+  document.getElementById('input2').value = "";
+}
+
+// --- SPRÁVA HÁRKOV ---
+function setupSheetTabs(sheetNames) {
+  const container = document.getElementById('sheet-tabs');
+  container.innerHTML = '';
+  
+  const colors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
+  
+  sheetNames.forEach((sheetObj, index) => {
+    const li = document.createElement('li');
+    li.className = 'nav-item';
+    
+    const a = document.createElement('a');
+    a.className = 'nav-link';
+    a.href = '#';
+    a.dataset.sheetName = sheetObj.originalName;
+    a.textContent = sheetObj.cleanName;
+    
+    const color = colors[index % colors.length];
+    a.dataset.color = color;
+    a.style.borderTop = `3px solid ${color}`;
+    a.style.borderTopWidth = '0px';
+    
+    li.appendChild(a);
+    container.appendChild(li);
+  });
+  
+  container.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (e.target.tagName === 'A' && !e.target.classList.contains('active')) {
+      switchSheet(e.target.dataset.sheetName);
+    }
+  });
+}
+
+function switchSheet(sheetName) {
+  if (!sheetName || !allSheetsData[sheetName]) {
+    const firstSheetName = Object.keys(allSheetsData)[0];
+    if (!firstSheetName) {
+      Swal.fire("Chyba", "Nenašli sa žiadne platné hárky.", "error");
+      return;
+    }
+    currentSheet = firstSheetName;
+  } else {
+    currentSheet = sheetName;
+  }
+  
+  localStorage.setItem('lastActiveSheet', currentSheet);
+  
+  document.querySelectorAll('#sheet-tabs .nav-link').forEach(tab => {
+    tab.classList.remove('active');
+    tab.style.borderTopWidth = '0px';
+    tab.style.backgroundColor = '';
+  });
+  
+  const activeTab = document.querySelector(`#sheet-tabs .nav-link[data-sheet-name="${currentSheet}"]`);
+  if (activeTab) {
+    activeTab.classList.add('active');
+    activeTab.style.borderTopWidth = '3px';
+    activeTab.style.backgroundColor = '#fff';
+  }
+  
+  const sheetData = allSheetsData[currentSheet];
+  if (sheetData && sheetData.headers && sheetData.tableData) {
+    updateUIForNewSheet(sheetData.headers, sheetData.tableData, sheetData.dropdownOptions, activeTab?.dataset?.color);
+  } else {
+    console.error('Neplatné dáta hárka:', sheetData);
+    Swal.fire("Chyba", "Dáta hárka sú neplatné.", "error");
+  }
+}
+
+function updateUIForNewSheet(headers, data, options, activeColor) {
+  tableHeaders = headers;
+  dropdownOptions = options;
+  createFilterControls(headers, options);
+  createTable(headers, data, activeColor);
+}
+
+// --- FILTRE ---
+function createFilterControls(headers, dropdownOpts) {
+  const container = document.getElementById('column-filters-panel');
+  container.innerHTML = '<div class="row"></div>';
+  const row = container.querySelector('.row');
+
+  headers.forEach((header, index) => {
+    if (!header) return;
+    
+    const cleanHeader = header.replace(/[-*]$|\s\((date|time|file|att)\)/gi, '').trim();
+    const safeHeaderId = `filter-col-${index}`;
+    let filterHtml = '';
+    
+    if (header.trim().endsWith('-')) {
+      const options = dropdownOpts[index] || [];
+      let optionsHtml = '<option value="" selected>(Všetky)</option>';
+      
+      options.forEach(opt => {
+        optionsHtml += `<option value="${opt}">${opt}</option>`;
+      });
+      
+      filterHtml = `
+        <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
+          <div class="floating-label-group">
+            <select id="${safeHeaderId}" data-col-index="${index + 4}" class="form-select column-filter" required>
+              ${optionsHtml}
+            </select>
+            <label for="${safeHeaderId}">${cleanHeader}</label>
+          </div>
+        </div>`;
+    } else {
+      filterHtml = `
+        <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
+          <div class="floating-label-group">
+            <input type="text" id="${safeHeaderId}" data-col-index="${index + 4}" class="form-control column-filter" placeholder=" ">
+            <label for="${safeHeaderId}">${cleanHeader}</label>
+            <span class="clear-filter-btn" onclick="clearFilterInput('${safeHeaderId}')">×</span>
+          </div>
+        </div>`;
+    }
+    
+    row.innerHTML += filterHtml;
+  });
+
+  document.querySelectorAll('.column-filter').forEach(input => {
+    const eventType = input.tagName === 'SELECT' ? 'change' : 'input';
+    input.addEventListener(eventType, function() {
+      if (dataTableInstance) {
+        dataTableInstance.column(parseInt(this.dataset.colIndex)).search(this.value).draw();
+        updateFilterHighlights();
+      }
+    });
+  });
+}
+
+function clearFilterInput(elementId) {
+  const input = document.getElementById(elementId);
+  if (input) {
+    input.value = '';
+    const event = new Event('input', { bubbles: true });
+    input.dispatchEvent(event);
+  }
+}
+
+function updateFilterHighlights() {
+  let isAnyFilterActive = false;
+  
+  document.querySelectorAll('.column-filter').forEach(input => {
+    const parentGroup = input.closest('.floating-label-group');
+    if (input.value) {
+      const className = input.tagName === 'SELECT' ? 'filter-active-select' : 'filter-active-text';
+      parentGroup.classList.add(className);
+      isAnyFilterActive = true;
+    } else {
+      parentGroup.classList.remove('filter-active-text', 'filter-active-select');
+    }
+  });
+
+  const globalSearch = document.querySelector('.dataTables_filter input');
+  if (globalSearch && globalSearch.value) {
+    globalSearch.closest('.dataTables_filter').style.backgroundColor = 
+      document.querySelector(`#sheet-tabs .nav-link.active`)?.dataset?.color || '#e9ecef';
+    isAnyFilterActive = true;
+  } else if (globalSearch) {
+    globalSearch.closest('.dataTables_filter').style.backgroundColor = '';
+  }
+
+  const filterPanelHeaderButton = document.querySelector('#headingFilters button');
+  const activeColor = document.querySelector(`#sheet-tabs .nav-link.active`)?.dataset?.color || '#e9ecef';
+  
+  if (isAnyFilterActive) {
+    filterPanelHeaderButton.style.backgroundColor = activeColor;
+  } else {
+    filterPanelHeaderButton.style.backgroundColor = '';
+  }
+}
+
+function populateFiltersFromState(dt) {
+  try {
+    const state = dt.state && dt.state.loaded ? dt.state.loaded() : null;
+    if (state && state.columns) {
+      state.columns.forEach((colState, i) => {
+        if (i >= 4 && colState.search && colState.search.search) {
+          const colIndex = i - 4;
+          const input = document.getElementById(`filter-col-${colIndex}`);
+          if (input) {
+            input.value = colState.search.search;
+            const event = new Event(input.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true });
+            input.dispatchEvent(event);
+          }
+        }
+      });
+    }
+  } catch (e) {
+    console.error('Chyba pri načítavaní filtrov:', e);
+  }
+}
+
+// --- TABUĽKA ---
+function createTable(headers, dataArray, activeColor) {
+  try {
+    if (dataTableInstance) {
+      dataTableInstance.destroy();
+      $('#dataTableContainer').empty();
+    }
+    
+    let table = $('<table>').attr('id', 'main-table').addClass('table table-striped table-bordered dt-responsive nowrap').css('width', '100%');
+    let tfoot = $('<tfoot><tr></tr></tfoot>');
+    
+    for (let i = 0; i < headers.length + 4; i++) {
+      tfoot.find('tr').append('<th></th>');
+    }
+    
+    table.append(tfoot);
+    $('#dataTableContainer').append(table);
+
+    $('head style#dynamic-header-style').remove();
+    $(`<style id="dynamic-header-style">#main-table > thead { background-color: ${activeColor} !important; }</style>`).appendTo('head');
+    
+    const columns = [
+      { 
+        data: null, 
+        defaultContent: '', 
+        className: 'select-checkbox', 
+        orderable: false, 
+        width: "10px" 
+      },
+      {
+        title: "Status",
+        data: 1,
+        orderable: false,
+        width: "30px",
+        render: (data, type, row) => {
+          const statuses = [
+            { text: "Nevybavené", color: "danger" },
+            { text: "Zaradené", color: "warning" },
+            { text: "Spracováva sa", color: "info" },
+            { text: "Skontrolované", color: "primary" },
+            { text: "Uzavreté", color: "success" }
+          ];
+          
+          const currentStatus = data ? parseInt(data) : 0;
+          return `
+            <select class="form-select form-select-sm status-select" data-row-id="${row[0]}">
+              ${statuses.map((status, index) => 
+                `<option value="${index}" ${index === currentStatus ? 'selected' : ''}>
+                  ${status.text}
+                </option>`
+              ).join('')}
+            </select>
+          `;
+        }
+      },
+      { 
+        title: "Akcie", 
+        orderable: false, 
+        data: null, 
+        className: 'actions-cell', 
+        width: "30px",
+        render: () => `
+          <div class="action-container">
+            <button class="btn btn-light btn-sm action-toggle-btn">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="action-buttons-hidden">
+              <button class="btn btn-success btn-sm editBtn">Upraviť</button>
+              <button class="btn btn-danger btn-sm deleteBtn">Vymazať</button>
+            </div>
+          </div>
+        `
+      },
+      { 
+        title: "Dupl.", 
+        orderable: false, 
+        data: null, 
+        defaultContent: "<button class='btn btn-info btn-sm duplicateBtn'><i class='fas fa-copy'></i></button>", 
+        width: "30px" 
+      },
+      ...headers.map((h, i) => ({
+        title: h.replace(/[-*]$|\s\((date|time|file|att)\)/gi, '').trim(),
+        data: i
+      }))
+    ];
+    
+    dataTableInstance = $('#main-table').DataTable({
+      data: dataArray,
+      columns: columns,
+      responsive: true,
+      dom: `
+        <"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>
+        <"row mt-2"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"text-end">
+        <"row"<"col-sm-12"rt>>
+        <"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
+      `,
+      buttons: [
+        {
+          extend: 'collection', 
+          text: '<i class="fas fa-check-square me-1"></i>Výber',
+          buttons: [
+            { text: 'Vybrať všetko (zobrazené)', action: (e, dt) => dt.rows({ search: 'applied' }).select() },
+            { text: 'Zrušiť výber', action: (e, dt) => dt.rows().deselect() },
+            { 
+              extend: 'copyHtml5', 
+              text: 'Kopírovať vybrané',
+              exportOptions: { modifier: { selected: true } } 
+            }
+          ]
+        },
+        { 
+          extend: 'collection',
+          text: '<i class="fas fa-file-export me-1"></i>Export',
+          buttons: [
+            { 
+              extend: 'csvHtml5', 
+              text: 'CSV',
+              exportOptions: {
+                columns: ':visible',
+                rows: { selected: true }
+              }
+            },
+            { 
+              extend: 'excelHtml5', 
+              text: 'Excel',
+              exportOptions: {
+                columns: ':visible',
+                rows: { selected: true }
+              }
+            },
+            {
+              text: 'HTML',
+              action: function(e, dt, node, config) {
+                exportToFormat('html');
+              }
+            },
+            {
+              text: 'PDF',
+              action: function(e, dt, node, config) {
+                exportToFormat('pdf');
+              }
+            },
+            {
+              text: 'PDF s logom',
+              action: function(e, dt, node, config) {
+                exportToFormat('pdf-logo');
+              }
+            }
+          ]
+        },
+        { 
+          text: '<i class="fas fa-envelope me-1"></i>Email',
+          action: function(e, dt, node, config) {
+            sendEmailExport();
+          }
+        },
+        { extend: 'colvis', text: '<i class="fas fa-columns me-1"></i>Stĺpce' }
+      ],
+      select: { style: 'os', selector: 'td:first-child' },
+      stateSave: true,
+      stateSaveCallback: function(settings, data) {
+        if (data) {
+          localStorage.setItem('DataTables_' + currentSheet, JSON.stringify(data));
+        }
+      },
+      stateLoadCallback: function(settings) {
+        try {
+          const state = localStorage.getItem('DataTables_' + currentSheet);
+          if (state) {
+            const parsedState = JSON.parse(state);
+            if (parsedState.columns && parsedState.columns.length === columns.length) {
+              return parsedState;
+            }
+          }
+          return null;
+        } catch (e) {
+          console.error('Chyba pri načítavaní stavu:', e);
+          return null;
+        }
+      },
+      initComplete: function() {
+        populateFiltersFromState(this.api());
+        updateFilterHighlights();
+      },
+      footerCallback: function(row, data, start, end, display) {
+        const api = this.api();
+        const intVal = i => typeof i === 'string' ? 
+          parseFloat(i.replace(/[^0-9.,-]/g, '').replace(',', '.')) || 0 : 
+          typeof i === 'number' ? i : 0;
+        
+        const sumColumnsDataIndices = [];
+        tableHeaders.forEach((header, index) => {
+          if (header.trim().endsWith('*')) sumColumnsDataIndices.push(index);
+        });
+        
+        sumColumnsDataIndices.forEach(dataIndex => {
+          const colIndex = dataIndex + 4;
+          if (api.column(colIndex).visible()) {
+            const selectedRows = api.rows({ selected: true }).data().length > 0;
+            const dataSrc = selectedRows ? api.rows({ selected: true }).data() : api.rows({ search: 'applied' }).data();
+            
+            if (dataSrc.length > 0) {
+              const total = dataSrc.pluck(dataIndex).reduce((a, b) => intVal(a) + intVal(b), 0);
+              const label = selectedRows ? 'Suma (výber):' : 'Suma (filter):';
+              $(api.column(colIndex).footer()).html(`${label} ${total.toLocaleString('sk-SK', { style: 'currency', currency: 'EUR' })}`);
+            } else {
+              $(api.column(colIndex).footer()).html('');
+            }
+          }
+        });
+      }
+    });
+    
+    addTableActionListeners();
+  } catch (e) {
+    console.error("Chyba pri vytváraní tabuľky:", e);
+    Swal.fire("Chyba aplikácie", `Vyskytla sa chyba pri vykresľovaní tabuľky: ${e.message}`, "error");
+  }
+}
+
+function addTableActionListeners() {
+  $('#main-table tbody').on('click', 'button.action-toggle-btn', function(e) {
+    e.stopPropagation();
+    $('.action-buttons-hidden').not($(this).siblings('.action-buttons-hidden')).hide();
+    $(this).siblings('.action-buttons-hidden').toggle();
+  });
+  
+  $(document).on('click', function(e) {
+    if (!$(e.target).closest('.action-container').length) {
+      $('.action-buttons-hidden').hide();
+    }
+  });
+  
+  $('#main-table tbody').on('click', 'button.deleteBtn', function() {
+    const data = dataTableInstance.row($(this).closest('tr')).data();
+    deleteData(data[0]);
+  });
+  
+  $('#main-table tbody').on('click', 'button.editBtn', function() {
+    const data = dataTableInstance.row($(this).closest('tr')).data();
+    openModal('edit', data);
+  });
+  
+  $('#main-table tbody').on('click', 'button.duplicateBtn', function() {
+    const data = dataTableInstance.row($(this).closest('tr')).data();
+    openModal('duplicate', data);
+  });
+  
+  $('#main-table tbody').on('change', '.status-select', function() {
+    const rowId = $(this).data('row-id');
+    const newStatus = $(this).val();
+    const row = dataTableInstance.row($(this).closest('tr'));
+    const rowData = row.data();
+    
+    rowData[1] = newStatus;
+    row.data(rowData).draw();
+    
+    const formObjects = {
+      RecId: rowData[0],
+      key: permanenKey,
+      action: 'edit',
+      sheetName: currentSheet,
+      values: rowData
+    };
+    
+    google.script.run
+      .withSuccessHandler(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Status bol aktualizovaný',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000
+        });
+      })
+      .withFailureHandler(error => {
+        console.error('Chyba pri aktualizácii statusu:', error);
+        Swal.fire('Chyba', 'Nepodarilo sa aktualizovať status', 'error');
+      })
+      .processForm(formObjects);
+  });
+}
+
+// --- MODÁLNE OKNO ---
+function openModal(action, rowData = {}) {
+  const data = (action === 'add' || action === 'duplicate') ? [...rowData] : rowData;
+  
+  if (action === 'duplicate' && data.length > 0) {
+    data[0] = '';
+  }
+  
+  $('#recordForm')[0].reset();
+  const modalFields = document.getElementById('modal-form-fields');
+  modalFields.innerHTML = '';
+  
+  tableHeaders.forEach((header, index) => {
+    if (!header) return;
+    
+    const cleanHeader = header.replace(/[-*]$|\s\((date|time|file|att)\)/gi, '').trim();
+    const value = data[index] || '';
+    
+    let fieldHtml = `<div class="col-md-4 mb-3"><label for="field-${index}" class="form-label">${cleanHeader}</label>`;
+    let inputType = 'text';
+    
+    if (header.toLowerCase().includes('(date)')) inputType = 'date';
+    if (header.toLowerCase().includes('(time)')) inputType = 'time';
+    
+    if (header.trim().endsWith('-')) {
+      const options = dropdownOptions[index] || [];
+      let optionsHtml = '<option value=""></option>';
+      
+      options.forEach(opt => {
+        optionsHtml += `<option value="${opt}" ${opt === value ? 'selected' : ''}>${opt}</option>`;
+      });
+      
+      fieldHtml += `<select id="field-${index}" class="form-select">${optionsHtml}</select>`;
+    } 
+    else if (header.toLowerCase().includes('(file)') || header.toLowerCase().includes('(att)')) {
+      fieldHtml += `
+        <input type="file" id="field-${index}" class="form-control" data-header="${header}">
+        <input type="hidden" id="src-field-${index}" value="${value}">`;
+      
+      if (value) {
+        fieldHtml += `<div class="mt-2">Aktuálny súbor: <a href="${value}" target="_blank" rel="noopener noreferrer">Zobraziť</a></div>`;
+      }
+    } 
+    else if (index === 1) {
+      const statuses = [
+        { text: "Nevybavené", color: "danger" },
+        { text: "Zaradené", color: "warning" },
+        { text: "Spracováva sa", color: "info" },
+        { text: "Skontrolované", color: "primary" },
+        { text: "Uzavreté", color: "success" }
+      ];
+      
+      fieldHtml += `
+        <select id="field-${index}" class="form-select">
+          ${statuses.map((status, i) => 
+            `<option value="${i}" ${i == value ? 'selected' : ''}>${status.text}</option>`
+          ).join('')}
+        </select>`;
+    }
+    else {
+      fieldHtml += `<input type="${inputType}" id="field-${index}" class="form-control" value="${value}">`;
+    }
+    
+    fieldHtml += `</div>`;
+    modalFields.innerHTML += fieldHtml;
+  });
+  
+  $('#RecId').val(data[0] || '');
+  $('#key').val(permanenKey);
+  $('#action').val(action);
+  $('#sheetName').val(currentSheet);
+  
+  $('#formModalLabel').text(
+    action === 'add' ? 'Pridať nový záznam' : 
+    (action === 'edit' ? 'Upraviť záznam' : 'Duplikovať záznam')
+  );
+  
+  $('#saveButton').css('display', (action === 'add' || action === 'edit') ? 'inline-block' : 'none');
+  $('#duplicateButton').css('display', action === 'duplicate' ? 'inline-block' : 'none');
+  
+  const idField = document.getElementById('field-0');
+  if (idField) {
+    idField.readOnly = true;
+    idField.parentElement.style.display = 'none';
+  }
+  
+  var formModal = new bootstrap.Modal(document.getElementById('formModal'));
+  formModal.show();
+}
+
+// --- SPRÁVA ZÁZNAMOV ---
+function deleteData(recordId) {
+  Swal.fire({
+    title: 'Naozaj chcete vymazať tento záznam?',
+    text: "Túto akciu nie je možné vrátiť!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Áno, vymazať!',
+    cancelButtonText: 'Zrušiť'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      showLoading();
+      google.script.run
+        .withSuccessHandler(refreshTable)
+        .withFailureHandler(onLoginFailure)
+        .deleteData({ recordId: recordId, key: permanenKey, sheetName: currentSheet });
+    }
+  });
+}
+
+async function handleFormSubmit() {
+  showLoading();
+  
+  const readFileAsBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve({
+        fileData: reader.result.split(',')[1],
+        mimeType: file.type,
+        fileName: file.name
+      });
+      reader.onerror = error => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
+  
+  const values = [];
+  const filesPayload = {};
+  
+  for (let index = 0; index < tableHeaders.length; index++) {
+    const header = tableHeaders[index];
+    const input = document.getElementById(`field-${index}`);
+    
+    if ((header.toLowerCase().includes('(file)') || header.toLowerCase().includes('(att)')) && input.files.length > 0) {
+      try {
+        filesPayload[header] = await readFileAsBase64(input.files[0]);
+        values.push('');
+      } catch (error) {
+        hideLoading();
+        Swal.fire("Chyba", `Nepodarilo sa načítať súbor pre pole "${header}".`, "error");
+        return;
+      }
+    } else {
+      values.push(input ? input.value : '');
+    }
+  }
+  
+  const formObjects = {
+    RecId: document.getElementById('RecId').value,
+    key: document.getElementById('key').value,
+    action: document.getElementById('action').value,
+    sheetName: document.getElementById('sheetName').value,
+    values: values,
+    files: filesPayload
+  };
+  
+  google.script.run
+    .withSuccessHandler(refreshTable)
+    .withFailureHandler(onLoginFailure)
+    .processForm(formObjects);
+  
+  const formModal = bootstrap.Modal.getInstance(document.getElementById('formModal'));
+  formModal.hide();
+}
+
+function refreshTable(data) {
+  hideLoading();
+  
+  if (data && data.allSheetsData) {
+    allSheetsData = data.allSheetsData;
+    const pageInfo = dataTableInstance.page.info();
+    switchSheet(currentSheet);
+    dataTableInstance.page(pageInfo.page).draw('page');
+    
+    Swal.fire({
+      icon: 'success',
+      title: 'Operácia bola úspešná!',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true
+    });
+  } else {
+    Swal.fire('Chyba', 'Nepodarilo sa obnoviť dáta zo servera.', 'error');
+  }
+}
+
+// --- EXPORT FUNKCIE ---
+function exportToFormat(format) {
+  showLoading();
+  
+  const visibleColumns = [];
+  dataTableInstance.columns().every(function(index) {
+    if (this.visible()) {
+      visibleColumns.push(index);
+    }
+  });
+  
+  const selectedRows = [];
+  dataTableInstance.rows({ selected: true }).every(function() {
+    selectedRows.push(this.index());
+  });
+  
+  const sheetData = allSheetsData[currentSheet];
+  
+  google.script.run
+    .withSuccessHandler(result => {
+      hideLoading();
+      handleExportResult(result, format);
+    })
+    .withFailureHandler(error => {
+      hideLoading();
+      console.error('Chyba pri exporte:', error);
+      Swal.fire('Chyba', 'Nepodarilo sa vygenerovať export', 'error');
+    })
+    ['exportTo' + format.toUpperCase()](
+      currentSheet,
+      sheetData.headers,
+      sheetData.tableData,
+      selectedRows,
+      visibleColumns
+    );
+}
+
+function handleExportResult(result, format) {
+  if (format === 'html') {
+    const htmlWindow = window.open();
+    htmlWindow.document.open();
+    htmlWindow.document.write(result);
+    htmlWindow.document.close();
+  } else if (format === 'pdf' || format === 'pdf-logo') {
+    window.open(result, '_blank');
+  }
+}
+
+function sendEmailExport() {
+  showLoading();
+  
+  const visibleColumns = [];
+  dataTableInstance.columns().every(function(index) {
+    if (this.visible()) {
+      visibleColumns.push(index);
+    }
+  });
+  
+  const selectedRows = [];
+  dataTableInstance.rows({ selected: true }).every(function() {
+    selectedRows.push(this.index());
+  });
+  
+  const sheetData = allSheetsData[currentSheet];
+  
+  google.script.run
+    .withSuccessHandler(() => {
+      hideLoading();
+      Swal.fire({
+        icon: 'success',
+        title: 'Email bol pripravený',
+        text: 'Otvorí sa váš emailový klient s predpripravenou správou.',
+        timer: 3000,
+        showConfirmButton: false
+      });
+    })
+    .withFailureHandler(error => {
+      hideLoading();
+      console.error('Chyba pri exporte emailom:', error);
+      Swal.fire('Chyba', 'Nepodarilo sa pripraviť email', 'error');
+    })
+    .exportToHTML(
+      currentSheet,
+      sheetData.headers,
+      sheetData.tableData,
+      selectedRows,
+      visibleColumns,
+      true
+    );
+}
+
+// --- POMOCNÉ FUNKCIE ---
+function showLoading() {
+  document.getElementById('loadingData').classList.remove('invisible');
+}
+
+function hideLoading() {
+  document.getElementById('loadingData').classList.add('invisible');
+}
+</script>
